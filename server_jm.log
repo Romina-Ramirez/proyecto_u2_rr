@@ -1,0 +1,6 @@
+2022-06-27 16:56:10 TRACE ProyectoU2RrApplication:20 - LOG TRACE
+2022-06-27 16:56:10 DEBUG ProyectoU2RrApplication:21 - LOG DEBUG
+2022-06-27 16:56:10 INFO  ProyectoU2RrApplication:22 - LOG INFO
+2022-06-27 16:56:10 WARN  ProyectoU2RrApplication:23 - LOG WARN
+2022-06-27 16:56:10 ERROR ProyectoU2RrApplication:24 - LOG ERROR
+2022-06-27 16:56:10 FATAL ProyectoU2RrApplication:25 - LOG FATAL
