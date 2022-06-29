@@ -6,16 +6,19 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-import com.uce.edu.demo.estudiante.service.IEstudianteJdbcService;
-import com.uce.edu.demo.estudiante.to.Estudiante;
+import com.uce.edu.demo.repository.modelo.Persona;
+import com.uce.edu.demo.service.IPersonaJpaService;
 
 @SpringBootApplication
 public class ProyectoU2RrApplication implements CommandLineRunner {
 
 	private static final Logger logger = Logger.getLogger(ProyectoU2RrApplication.class);
 
+	// @Autowired
+	// private IPersonaJdbcService iPersonaJdbcService;
+
 	@Autowired
-	private IEstudianteJdbcService estudianteJdbcService;
+	private IPersonaJpaService iPersonaJpaService;
 
 	public static void main(String[] args) {
 		SpringApplication.run(ProyectoU2RrApplication.class, args);
@@ -25,38 +28,31 @@ public class ProyectoU2RrApplication implements CommandLineRunner {
 	public void run(String... args) throws Exception {
 		// TODO Auto-generated method stub
 
-		Estudiante estudiante = new Estudiante();
-		estudiante.setId("1");
-		estudiante.setNombre("Romina");
-		estudiante.setApellido("Ramírez");
-		estudiante.setDireccion("Av. Independencia");
-		estudiante.setTelefono("0968527182");
+		// logger.info("Lista: " + this.iPersonaJdbcService.buscarTodos());
 
-		Estudiante estudiante1 = new Estudiante();
-		estudiante1.setId("2");
-		estudiante1.setNombre("Evelyn");
-		estudiante1.setApellido("Loayza");
-		estudiante1.setDireccion("Av. Kennedy");
-		estudiante.setTelefono("0987462514");
+		// Buscar por Id
+		//logger.info("Dato con JPA: " + this.iPersonaJpaService.buscarPorId(3));
+		
+		Persona persona = new Persona();
+		persona.setId(10);
+		persona.setNombre("Romina");
+		persona.setApellido("Ramírez");
+		
+		Persona persona1 = new Persona();
+		persona1.setId(11);
+		persona1.setNombre("Mait");
+		persona1.setApellido("Tapia");
 
-		Estudiante estudiante2 = new Estudiante();
-		estudiante2.setId("3");
+		// Guardar
+		this.iPersonaJpaService.guardar(persona);
+		this.iPersonaJpaService.guardar(persona1);
 
-		// Insertar
-		this.estudianteJdbcService.guardar(estudiante);
-		this.estudianteJdbcService.guardar(estudiante1);
-		this.estudianteJdbcService.guardar(estudiante2);
+		//Actualizar
+		persona1.setNombre("Maite");
+		this.iPersonaJpaService.actualizar(persona1);
 
-		// Leer
-		logger.info(this.estudianteJdbcService.buscarPorId("1"));
-
-		estudiante1.setTelefono("0987462524");
-
-		// Actualizar
-		this.estudianteJdbcService.actualizar(estudiante1);
-
-		// Eliminar
-		this.estudianteJdbcService.eliminarPorId("3");
+		//Eliminar
+		this.iPersonaJpaService.eliminarPorId(11);
 
 	}
 
