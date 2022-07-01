@@ -1,14 +1,14 @@
 package com.uce.edu.demo.estudiante.repository;
 
-import com.uce.edu.demo.estudiante.to.Estudiante;
+import com.uce.edu.demo.estudiante.to.EstudianteTo;
 
 public interface IEstudianteJdbcRepository {
 
-	public void crear(Estudiante e);
+	public void crear(EstudianteTo e);
 
-	public Estudiante leer(String id);
+	public EstudianteTo leer(String id);
 
-	public void actualizar(Estudiante e);
+	public void actualizar(EstudianteTo e);
 
 	public void eliminar(String id);
 

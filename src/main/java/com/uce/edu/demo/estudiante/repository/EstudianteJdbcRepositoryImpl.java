@@ -6,7 +6,7 @@ import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
-import com.uce.edu.demo.estudiante.to.Estudiante;
+import com.uce.edu.demo.estudiante.to.EstudianteTo;
 
 @Repository
 public class EstudianteJdbcRepositoryImpl implements IEstudianteJdbcRepository {
@@ -17,7 +17,7 @@ public class EstudianteJdbcRepositoryImpl implements IEstudianteJdbcRepository {
 	private JdbcTemplate jdbcTemplate;
 
 	@Override
-	public void crear(Estudiante e) {
+	public void crear(EstudianteTo e) {
 		// TODO Auto-generated method stub
 		logger.info("Se agregó a la base de datos el estudiante: " + e);
 		this.jdbcTemplate.update(
@@ -26,15 +26,15 @@ public class EstudianteJdbcRepositoryImpl implements IEstudianteJdbcRepository {
 	}
 
 	@Override
-	public Estudiante leer(String id) {
+	public EstudianteTo leer(String id) {
 		// TODO Auto-generated method stub
 		logger.info("Se buscó el estudiante con: " + id);
 		return this.jdbcTemplate.queryForObject("SELECT * FROM estudiante WHERE id=?", new Object[] { id },
-				new BeanPropertyRowMapper<Estudiante>(Estudiante.class));
+				new BeanPropertyRowMapper<EstudianteTo>(EstudianteTo.class));
 	}
 
 	@Override
-	public void actualizar(Estudiante e) {
+	public void actualizar(EstudianteTo e) {
 		// TODO Auto-generated method stub
 		logger.info("Se actualizó el estudiante: " + e);
 		this.jdbcTemplate.update("UPDATE estudiante SET nombre=?, apellido=?, direccion=?, telefono=? WHERE id=?",
