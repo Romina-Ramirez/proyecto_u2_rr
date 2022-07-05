@@ -2,15 +2,20 @@ package com.uce.edu.demo.repository.modelo;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "persona")
+@Table(name = "persona1")
 public class Persona {
 
 	@Id
 	@Column(name = "id")
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "name_generator")
+	@SequenceGenerator(name = "name_generator", sequenceName = "pers_seq_id", allocationSize = 1)
 	private Integer id;
 	
 	@Column(name = "nombre")
