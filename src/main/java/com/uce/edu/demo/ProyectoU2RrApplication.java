@@ -1,12 +1,13 @@
 package com.uce.edu.demo;
 
+import java.util.List;
+
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-import com.uce.edu.demo.estudiante.service.IEstudianteJpaService;
 import com.uce.edu.demo.repository.modelo.Persona;
 import com.uce.edu.demo.service.IPersonaJpaService;
 
@@ -27,26 +28,30 @@ public class ProyectoU2RrApplication implements CommandLineRunner {
 		// TODO Auto-generated method stub
 
 		Persona persona = new Persona();
-		persona.setNombre("Luis");
+		persona.setCedula("1739201776");
+		persona.setNombre("Romina");
 		persona.setApellido("Ramírez");
+		persona.setGenero("F");
 
 		Persona persona1 = new Persona();
+		persona1.setCedula("0705376147");
 		persona1.setNombre("Sana");
 		persona1.setApellido("Lopez");
+		persona1.setGenero("F");
 
 		// Guardar
-		this.iPersonaJpaService.guardar(persona);
-		this.iPersonaJpaService.guardar(persona1);
-		
-		//Leer
-		//this.iPersonaJpaService.buscarPorId(10);
+		// this.iPersonaJpaService.guardar(persona);
+		// this.iPersonaJpaService.guardar(persona1);
 
-		// Actualizar
-		persona1.setNombre("Maite");
-		//this.iPersonaJpaService.actualizar(persona1);
+		// Leer por Cedula
+		// Persona p = this.iPersonaJpaService.buscarPorCedula("0705376147");
+		// logger.info("Persona encontrada: " + p);
 
-		// Eliminar
-		//this.iPersonaJpaService.eliminarPorId(11);
+		// Leer por Apellido
+		List<Persona> listaPersona = this.iPersonaJpaService.buscarPorApellido("Ramírez");
+		for (Persona item : listaPersona) {
+			logger.info("Persona: " + item);
+		}
 
 	}
 
