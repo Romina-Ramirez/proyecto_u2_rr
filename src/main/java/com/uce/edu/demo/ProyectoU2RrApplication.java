@@ -48,9 +48,21 @@ public class ProyectoU2RrApplication implements CommandLineRunner {
 		// logger.info("Persona encontrada: " + p);
 
 		// Leer por Apellido
-		List<Persona> listaPersona = this.iPersonaJpaService.buscarPorApellido("Ramírez");
-		for (Persona item : listaPersona) {
-			logger.info("Persona: " + item);
+		List<Persona> listaApellido = this.iPersonaJpaService.buscarPorApellido("Ramírez");
+		for (Persona item : listaApellido) {
+			logger.info("Busqueda por apellido: " + item);
+		}
+
+		// Leer por Genero
+		List<Persona> listaGenero = this.iPersonaJpaService.buscarPorGenero("F");
+		for (Persona item : listaGenero) {
+			logger.info("Busqueda por genero: " + item);
+		}
+
+		// Leer por Nombre
+		List<Persona> listaNombre = this.iPersonaJpaService.buscarPorNombre("Romina");
+		for (Persona item : listaNombre) {
+			logger.info("Busqueda por nombre: " + item);
 		}
 
 	}

@@ -44,4 +44,14 @@ public class PersonaJpaServiceImpl implements IPersonaJpaService {
 		return this.iPersonaJpaRepository.leerPorApellido(apellido);
 	}
 
+	@Override
+	public List<Persona> buscarPorGenero(String genero) {
+		return this.iPersonaJpaRepository.leerPorGenero(genero);
+	}
+
+	@Override
+	public List<Persona> buscarPorNombre(String nombre) {
+		return this.iPersonaJpaRepository.leerPorNombre(nombre);
+	}
+
 }
