@@ -6,20 +6,28 @@ import com.uce.edu.demo.repository.modelo.Persona;
 
 public interface IPersonaJpaService {
 
+	// Guardar
 	public void guardar(Persona p);
 
-	public List<Persona> buscarPorApellido(String apellido);
-	
-	public List<Persona> buscarPorGenero(String genero);
-	
-	public List<Persona> buscarPorNombre(String nombre);
+	// Buscar
+	public Persona buscarPorId(Integer id);
 
 	public Persona buscarPorCedula(String cedula);
 
-	public Persona buscarPorId(Integer id);
+	public List<Persona> buscarPorApellido(String apellido);
 
+	public List<Persona> buscarPorGenero(String genero);
+
+	public List<Persona> buscarPorNombre(String nombre);
+
+	// Actualizar
 	public void actualizar(Persona p);
 
+	public int actualizarPorApellido(String genero, String apellido);
+
+	// Eliminar
 	public void eliminarPorId(Integer id);
+
+	public int eliminarPorGenero(String genero);
 
 }

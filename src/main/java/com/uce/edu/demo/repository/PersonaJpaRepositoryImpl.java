@@ -18,25 +18,16 @@ public class PersonaJpaRepositoryImpl implements IPersonaJpaRepository {
 	@PersistenceContext
 	private EntityManager entityManager;
 
+	// Crear
 	@Override
 	public void crear(Persona p) {
 		this.entityManager.persist(p);
 	}
 
+	// Leer
 	@Override
 	public Persona leer(Integer id) {
 		return this.entityManager.find(Persona.class, id);
-	}
-
-	@Override
-	public void actualizar(Persona p) {
-		this.entityManager.merge(p);
-	}
-
-	@Override
-	public void eliminar(Integer id) {
-		Persona persona = this.leer(id);
-		this.entityManager.remove(persona);
 	}
 
 	@Override
@@ -66,6 +57,37 @@ public class PersonaJpaRepositoryImpl implements IPersonaJpaRepository {
 		Query myQuery = this.entityManager.createQuery("SELECT p FROM Persona p WHERE p.nombre = :datoNombre");
 		myQuery.setParameter("datoNombre", nombre);
 		return myQuery.getResultList();
+	}
+
+	// Actualizar
+	@Override
+	public void actualizar(Persona p) {
+		this.entityManager.merge(p);
+	}
+
+	@Override
+	public int actualizarPorApellido(String genero, String apellido) {
+		// UPDATE persona SET pers_genero='F' WHERE pers_apellido = 'Ramírez'
+		Query myQuery = this.entityManager
+				.createQuery("UPDATE Persona p SET p.genero = :datoGenero WHERE p.apellido = :datoApellido");
+		myQuery.setParameter("datoGenero", genero);
+		myQuery.setParameter("datoApellido", apellido);
+		return myQuery.executeUpdate();
+	}
+
+	// Eliminar
+	@Override
+	public void eliminar(Integer id) {
+		Persona persona = this.leer(id);
+		this.entityManager.remove(persona);
+	}
+
+	@Override
+	public int eliminarPorGenero(String genero) {
+		// DELETE FROM persona WHERE pers_genero='M'
+		Query myQuery = this.entityManager.createQuery("DELETE FROM Persona p WHERE p.genero = :genero");
+		myQuery.setParameter("genero", genero);
+		return myQuery.executeUpdate();
 	}
 
 }

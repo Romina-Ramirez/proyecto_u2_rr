@@ -14,24 +14,16 @@ public class PersonaJpaServiceImpl implements IPersonaJpaService {
 	@Autowired
 	private IPersonaJpaRepository iPersonaJpaRepository;
 
+	// Guardar
 	@Override
 	public void guardar(Persona p) {
 		this.iPersonaJpaRepository.crear(p);
 	}
 
+	// Buscar
 	@Override
 	public Persona buscarPorId(Integer id) {
 		return this.iPersonaJpaRepository.leer(id);
-	}
-
-	@Override
-	public void actualizar(Persona p) {
-		this.iPersonaJpaRepository.actualizar(p);
-	}
-
-	@Override
-	public void eliminarPorId(Integer id) {
-		this.iPersonaJpaRepository.eliminar(id);
 	}
 
 	@Override
@@ -52,6 +44,28 @@ public class PersonaJpaServiceImpl implements IPersonaJpaService {
 	@Override
 	public List<Persona> buscarPorNombre(String nombre) {
 		return this.iPersonaJpaRepository.leerPorNombre(nombre);
+	}
+
+	// Actualizar
+	@Override
+	public void actualizar(Persona p) {
+		this.iPersonaJpaRepository.actualizar(p);
+	}
+
+	@Override
+	public int actualizarPorApellido(String genero, String apellido) {
+		return this.iPersonaJpaRepository.actualizarPorApellido(genero, apellido);
+	}
+
+	// Eliminar
+	@Override
+	public void eliminarPorId(Integer id) {
+		this.iPersonaJpaRepository.eliminar(id);
+	}
+
+	@Override
+	public int eliminarPorGenero(String genero) {
+		return this.iPersonaJpaRepository.eliminarPorGenero(genero);
 	}
 
 }
