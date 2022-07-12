@@ -5,6 +5,7 @@ import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
+import javax.persistence.TypedQuery;
 import javax.transaction.Transactional;
 
 import org.springframework.stereotype.Repository;
@@ -36,6 +37,30 @@ public class PersonaJpaRepositoryImpl implements IPersonaJpaRepository {
 		Query jpqlQuery = this.entityManager.createQuery("SELECT p FROM Persona p WHERE p.cedula = :datoCedula");
 		jpqlQuery.setParameter("datoCedula", cedula);
 		return (Persona) jpqlQuery.getSingleResult();
+
+	}
+
+	@Override
+	public Persona leerPorCedulaTyped(String cedula) {
+		TypedQuery<Persona> miTypedQuery = this.entityManager
+				.createQuery("SELECT p FROM Persona p WHERE p.cedula = :datoCedula", Persona.class);
+		miTypedQuery.setParameter("datoCedula", cedula);
+		return miTypedQuery.getSingleResult();
+	}
+
+	@Override
+	public Persona leerPorCedulaNamed(String cedula) {
+		Query miNamedQuery = this.entityManager.createNamedQuery("Persona.buscarPorCedula");
+		miNamedQuery.setParameter("datoCedula", cedula);
+		return (Persona) miNamedQuery.getSingleResult();
+	}
+
+	@Override
+	public Persona leerPorCedulaTypedNamed(String cedula) {
+		TypedQuery<Persona> miTypedNamedQuery = this.entityManager.createNamedQuery("Persona.buscarPorCedula",
+				Persona.class);
+		miTypedNamedQuery.setParameter("datoCedula", cedula);
+		return miTypedNamedQuery.getSingleResult();
 	}
 
 	@Override
@@ -43,6 +68,15 @@ public class PersonaJpaRepositoryImpl implements IPersonaJpaRepository {
 		Query myQuery = this.entityManager.createQuery("SELECT p FROM Persona p WHERE p.apellido = :datoApellido");
 		myQuery.setParameter("datoApellido", apellido);
 		return myQuery.getResultList();
+	}
+
+	@Override
+	public List<Persona> leerPorNombreApellido(String nombre, String apellido) {
+		TypedQuery<Persona> miTypedNamedQuery = this.entityManager.createNamedQuery("Persona.buscarPorNombreApellido",
+				Persona.class);
+		miTypedNamedQuery.setParameter("datoNombre", nombre);
+		miTypedNamedQuery.setParameter("datoApellido", apellido);
+		return miTypedNamedQuery.getResultList();
 	}
 
 	@Override

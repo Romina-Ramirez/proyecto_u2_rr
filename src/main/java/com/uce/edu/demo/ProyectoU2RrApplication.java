@@ -1,6 +1,6 @@
 package com.uce.edu.demo;
 
-import java.math.BigDecimal;
+import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,11 +8,8 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-import com.uce.edu.demo.matriculacion.repository.modelo.Propietario;
-import com.uce.edu.demo.matriculacion.repository.modelo.Vehiculo;
-import com.uce.edu.demo.matriculacion.service.IMatriculaGestorService;
-import com.uce.edu.demo.matriculacion.service.IPropietarioService;
-import com.uce.edu.demo.matriculacion.service.IVehiculoService;
+import com.uce.edu.demo.repository.modelo.Persona;
+import com.uce.edu.demo.service.IPersonaJpaService;
 
 @SpringBootApplication
 public class ProyectoU2RrApplication implements CommandLineRunner {
@@ -20,10 +17,7 @@ public class ProyectoU2RrApplication implements CommandLineRunner {
 	private static final Logger logger = Logger.getLogger(ProyectoU2RrApplication.class);
 
 	@Autowired
-	private IVehiculoService iVehiculoService;
-	
-	@Autowired
-	private IPropietarioService iPropietarioService;
+	private IPersonaJpaService iPersonaJpaService;
 
 	public static void main(String[] args) {
 		SpringApplication.run(ProyectoU2RrApplication.class, args);
@@ -33,39 +27,31 @@ public class ProyectoU2RrApplication implements CommandLineRunner {
 	public void run(String... args) throws Exception {
 		// TODO Auto-generated method stub
 
-		Vehiculo vehiculo = new Vehiculo();
-		vehiculo.setPlaca("ABC-123");
-		vehiculo.setMarca("Audi");
-		vehiculo.setModelo("R8");
-		vehiculo.setPrecio(new BigDecimal(20000));
-		vehiculo.setTipo("L");
-		
-		this.iVehiculoService.insertarVehiculo(vehiculo);
-		
-		logger.info(this.iVehiculoService.buscarVehiculo("ABC-123"));
-		
-		vehiculo.setPrecio(new BigDecimal(200000));
-		this.iVehiculoService.actualizarVehiculo(vehiculo);
-		
-		this.iVehiculoService.eliminarVehiculo("ABB-123");
-		
-		
-		Propietario propietario = new Propietario();
-		propietario.setCedula("1723069804");
-		propietario.setNombre("Romina");
-		propietario.setApellido("Ramírez");
-		
-		this.iPropietarioService.insertarPropietario(propietario);
-		
-		logger.info(this.iPropietarioService.buscar("1723069804"));
-		
-		propietario.setNombre("Maite");
-		this.iPropietarioService.actualizar(propietario);
-		
-		this.iPropietarioService.eliminarPropietario("1723069801");
-		
-		
-//		this.gestorService.generarMatricula("1723069801", "AAA-123");
+		Persona persona = new Persona();
+		persona.setCedula("1723069801");
+		persona.setNombre("Romina");
+		persona.setApellido("Ramírez");
+		persona.setGenero("FE");
+
+		// this.iPersonaJpaService.guardar(persona);
+
+		// 1. TypedQuery
+		Persona perTyped = this.iPersonaJpaService.buscarPorCedulaTyped("1739201782");
+		logger.info("Persona Typed: " + perTyped);
+
+		// 2. NamedQuery
+		Persona perNamed = this.iPersonaJpaService.buscarPorCedulaNamed("1739201782");
+		logger.info("Persona Named: " + perNamed);
+
+		// 3. TypedQuery + NamedQuery
+		Persona perTypedNamed = this.iPersonaJpaService.buscarPorCedulaTypedNamed("1739201782");
+		logger.info("Persona TypedNamed: " + perTypedNamed);
+
+		// 4. Varios NamedQuery
+		List<Persona> listaPersona = this.iPersonaJpaService.buscarPorNombreApellido("Romina", "Ramírez");
+		for (Persona item : listaPersona) {
+			logger.info("Persona: " + item);
+		}
 
 	}
 

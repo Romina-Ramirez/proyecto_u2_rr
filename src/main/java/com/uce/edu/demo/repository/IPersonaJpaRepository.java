@@ -14,7 +14,15 @@ public interface IPersonaJpaRepository {
 
 	public Persona leerPorCedula(String cedula);
 
+	public Persona leerPorCedulaTyped(String cedula);
+
+	public Persona leerPorCedulaNamed(String cedula);
+
+	public Persona leerPorCedulaTypedNamed(String cedula);
+
 	public List<Persona> leerPorApellido(String apellido);
+
+	public List<Persona> leerPorNombreApellido(String nombre, String apellido);
 
 	public List<Persona> leerPorGenero(String genero);
 
