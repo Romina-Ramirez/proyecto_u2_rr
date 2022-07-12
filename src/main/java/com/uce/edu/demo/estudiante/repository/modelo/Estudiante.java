@@ -2,27 +2,39 @@ package com.uce.edu.demo.estudiante.repository.modelo;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.NamedQuery;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 @Entity
 @Table(name = "estudiante")
+
+@NamedQuery(name = "Estudiante.buscarPorApellidoDireccion", query = "SELECT e FROM Estudiante e WHERE e.apellido = :datoApellido AND e.direccion = :datoDireccion")
+@NamedQuery(name = "Estudiante.buscarPorApellidoTelefono", query = "SELECT e FROM Estudiante e WHERE e.apellido = :datoApellido AND e.telefono = :datoTelefono")
+@NamedQuery(name = "Estudiante.buscarPorNombreComienzaLetra", query = "SELECT e FROM Estudiante e WHERE e.nombre LIKE :Letra")
+@NamedQuery(name = "Estudiante.OrdenarPorNombreApellidoAsc", query = "SELECT e FROM Estudiante e ORDER BY e.nombre, e.apellido")
+
 public class Estudiante {
 
 	@Id
-	@Column(name = "id")
-	private String id;
+	@Column(name = "estu_id")
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "name_generator")
+	@SequenceGenerator(name = "name_generator", sequenceName = "estu_id_seq", allocationSize = 1)
+	private Integer id;
 
-	@Column(name = "nombre")
+	@Column(name = "estu_nombre")
 	private String nombre;
 
-	@Column(name = "apellido")
+	@Column(name = "estu_apellido")
 	private String apellido;
 
-	@Column(name = "direccion")
+	@Column(name = "estu_direccion")
 	private String direccion;
 
-	@Column(name = "telefono")
+	@Column(name = "estu_telefono")
 	private String telefono;
 
 	// Método toString
@@ -33,11 +45,11 @@ public class Estudiante {
 	}
 
 	// Set y Get
-	public String getId() {
+	public Integer getId() {
 		return id;
 	}
 
-	public void setId(String id) {
+	public void setId(Integer id) {
 		this.id = id;
 	}
 
