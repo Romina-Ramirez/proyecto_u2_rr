@@ -20,6 +20,12 @@ public interface IPersonaJpaRepository {
 
 	public Persona leerPorCedulaTypedNamed(String cedula);
 
+	public Persona leerPorCedulaNative(String cedula);
+
+	public Persona leerPorCedulaNamedNative(String cedula);
+
+	public Persona leerPorCedulaCriteriaApi(String cedula);
+
 	public List<Persona> leerPorApellido(String apellido);
 
 	public List<Persona> leerPorNombreApellido(String nombre, String apellido);
