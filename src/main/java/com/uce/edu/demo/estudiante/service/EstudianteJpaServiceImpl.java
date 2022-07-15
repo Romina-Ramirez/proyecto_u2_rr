@@ -23,7 +23,7 @@ public class EstudianteJpaServiceImpl implements IEstudianteJpaService {
 	public Estudiante buscarPorId(Integer id) {
 		return this.iEstudianteJpaRepository.leer(id);
 	}
-	
+
 	// Typed
 	@Override
 	public Estudiante buscarPorNombreTelefonoTyped(String nombre, String telefono) {
@@ -55,6 +55,28 @@ public class EstudianteJpaServiceImpl implements IEstudianteJpaService {
 	@Override
 	public List<Estudiante> OrdenarPorNombreApellidoAscTypedNamed() {
 		return this.iEstudianteJpaRepository.OrdenarPorNombreApellidoAscTypedNamed();
+	}
+
+	// Native
+	@Override
+	public List<Estudiante> buscarPorGeneroNative(String genero) {
+		return this.iEstudianteJpaRepository.leerPorGeneroNative(genero);
+	}
+
+	@Override
+	public List<Estudiante> buscarPorSemestreNative(Integer semestre) {
+		return this.iEstudianteJpaRepository.leerPorSemestreNative(semestre);
+	}
+
+	// NamedNative
+	@Override
+	public List<Estudiante> buscarPorApellidoComienzaLetraNamedNative(String letra) {
+		return this.iEstudianteJpaRepository.leerPorApellidoComienzaLetraNamedNative(letra);
+	}
+
+	@Override
+	public List<Estudiante> buscarPorSemestreGeneroNamedNative(Integer semestre, String genero) {
+		return this.iEstudianteJpaRepository.leerPorSemestreGeneroNamedNative(semestre, genero);
 	}
 
 	@Override
