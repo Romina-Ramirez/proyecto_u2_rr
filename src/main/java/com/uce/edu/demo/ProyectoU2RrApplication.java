@@ -1,15 +1,13 @@
 package com.uce.edu.demo;
 
-import java.util.List;
-
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-import com.uce.edu.demo.estudiante.repository.modelo.Estudiante;
-import com.uce.edu.demo.estudiante.service.IEstudianteJpaService;
+import com.uce.edu.demo.repository.modelo.Persona;
+import com.uce.edu.demo.service.IPersonaJpaService;
 
 @SpringBootApplication
 public class ProyectoU2RrApplication implements CommandLineRunner {
@@ -17,7 +15,7 @@ public class ProyectoU2RrApplication implements CommandLineRunner {
 	private static final Logger logger = Logger.getLogger(ProyectoU2RrApplication.class);
 
 	@Autowired
-	private IEstudianteJpaService iEstudianteJpaService;
+	private IPersonaJpaService iPersonaJpaService;
 
 	public static void main(String[] args) {
 		SpringApplication.run(ProyectoU2RrApplication.class, args);
@@ -27,54 +25,42 @@ public class ProyectoU2RrApplication implements CommandLineRunner {
 	public void run(String... args) throws Exception {
 		// TODO Auto-generated method stub
 
-//		Estudiante estudiante = new Estudiante();
-//		estudiante.setCedula("1793837261");
-//		estudiante.setNombre("Maria");
-//		estudiante.setApellido("Ramírez");
-//		estudiante.setDireccion("Av. Independencia");
-//		estudiante.setTelefono("0976566655");
-//		estudiante.setGenero("F");
-//		estudiante.setSemestre(6);
+//		// 1. TypedQuery
+//		Persona perTyped = this.iPersonaJpaService.buscarPorCedulaTyped("1739201782");
+//		logger.info("Persona Typed: " + perTyped);
 //
-//		Estudiante estudiante1 = new Estudiante();
-//		estudiante1.setCedula("1787639009");
-//		estudiante1.setNombre("Jorge");
-//		estudiante1.setApellido("Aguilar");
-//		estudiante1.setDireccion("Av. Kennedy");
-//		estudiante1.setTelefono("0965379483");
-//		estudiante1.setGenero("M");
-//		estudiante1.setSemestre(6);
+//		// 2. NamedQuery
+//		Persona perNamed = this.iPersonaJpaService.buscarPorCedulaNamed("1739201782");
+//		logger.info("Persona Named: " + perNamed);
 //
-//		this.iEstudianteJpaService.guardar(estudiante);
-//		this.iEstudianteJpaService.guardar(estudiante1);
+//		// 3. TypedQuery + NamedQuery
+//		Persona perTypedNamed = this.iPersonaJpaService.buscarPorCedulaTypedNamed("1739201782");
+//		logger.info("Persona TypedNamed: " + perTypedNamed);
+//
+//		// 4. Varios NamedQuery
+//		List<Persona> listaPersona = this.iPersonaJpaService.buscarPorNombreApellido("Romina", "Ramírez");
+//		for (Persona item : listaPersona) {
+//			logger.info("Persona: " + item);
+//		}
+//
+//		// 5. NativeQuery
+//		Persona perNative = this.iPersonaJpaService.buscarPorCedulaNative("1739201782");
+//		logger.info("Persona Native: " + perNative);
+//
+//		// 6. NamedNativeQuery
+//		Persona perNamedNative = this.iPersonaJpaService.buscarPorCedulaNamedNative("1739201782");
+//		logger.info("Persona NamedNative: " + perNamedNative);
 
-		// 5. NativeQuery
-		List<Estudiante> listaGeneroNative = this.iEstudianteJpaService.buscarPorGeneroNative("F");
-		logger.info("Búsqueda por género Native:");
-		for (Estudiante item : listaGeneroNative) {
-			logger.info("Estudiante Native: " + item);
-		}
-
-		List<Estudiante> listaSemestreNative = this.iEstudianteJpaService.buscarPorSemestreNative(6);
-		logger.info("Búsqueda por semestre Native:");
-		for (Estudiante item : listaSemestreNative) {
-			logger.info("Estudiante Native: " + item);
-		}
-
-		// 6. NamedNativeQuery
-		List<Estudiante> listaApellidoLetraNamedNative = this.iEstudianteJpaService
-				.buscarPorApellidoComienzaLetraNamedNative("R");
-		logger.info("Búsqueda por apellidos que comienzan con R NamedNative:");
-		for (Estudiante item : listaApellidoLetraNamedNative) {
-			logger.info("Estudiante NamedNative: " + item);
-		}
-
-		List<Estudiante> listaSemestreGeneroNamedNative = this.iEstudianteJpaService
-				.buscarPorSemestreGeneroNamedNative(6, "M");
-		logger.info("Búsqueda por semestre y genero NamedNative:");
-		for (Estudiante item : listaSemestreGeneroNamedNative) {
-			logger.info("Estudiante NamedNative: " + item);
-		}
+		// 7. Criteria API
+		Persona perCriteria = this.iPersonaJpaService.buscarPorCedulaCriteriaApi("1739201782");
+		logger.info("Persona Criteria: " + perCriteria);
+		
+		// 8. Criteria Dinamica
+		Persona perCriteriaDin = this.iPersonaJpaService.buscarDinamicamente("Luis", "Ramírez", "M");
+		logger.info("Persona Criteria Dinamica: " + perCriteriaDin);
+		
+		Persona perCriteriaDin2 = this.iPersonaJpaService.buscarDinamicamente("Sana", "Tapia", "FE");
+		logger.info("Persona Criteria Dinamica2: " + perCriteriaDin2);
 
 	}
 

@@ -25,6 +25,8 @@ public interface IPersonaJpaRepository {
 	public Persona leerPorCedulaNamedNative(String cedula);
 
 	public Persona leerPorCedulaCriteriaApi(String cedula);
+	
+	public Persona leerDinamicamente(String nombre, String apellido, String genero);
 
 	public List<Persona> leerPorApellido(String apellido);
 

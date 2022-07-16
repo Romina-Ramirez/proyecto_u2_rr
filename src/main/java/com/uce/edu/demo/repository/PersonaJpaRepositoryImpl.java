@@ -8,6 +8,7 @@ import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import javax.transaction.Transactional;
 
@@ -100,11 +101,81 @@ public class PersonaJpaRepositoryImpl implements IPersonaJpaRepository {
 
 	@Override
 	public Persona leerPorCedulaCriteriaApi(String cedula) {
+		
+		// SELECT p FROM Persona p WHERE p.cedula = :datoCedula
+		
+		// Creamos una instancia de la interfaz CriteriaBuilder Fabrica para construir el SQL
 		CriteriaBuilder miBuilder = this.entityManager.getCriteriaBuilder();
+		
+		// Especificamos el retorno de mi SQL 
 		CriteriaQuery<Persona> miQuery = miBuilder.createQuery(Persona.class);
-		Root<Persona> personaRoot = miQuery.from(Persona.class);
-		TypedQuery<Persona> miQueryFinal = this.entityManager
-				.createQuery(miQuery.select(personaRoot).where(miBuilder.equal(personaRoot.get("cedula"), cedula)));
+		
+		// Aquí empezamos a construir el SQL
+		// Root FROM
+		
+		Root<Persona> personaFrom = miQuery.from(Persona.class); // FROM Persona
+		// miQuery.select(personaFrom) // Select p FROM Persona
+		// Las condiciones where en criteria API se los conoce como predicados
+		Predicate p1 = miBuilder.equal(personaFrom.get("cedula"), cedula); // p.cedula = :datoCedula
+		
+		//CriteriaQuery<Persona> myQueryCompleto = miQuery.select(personaFrom).where(p1);
+		miQuery.select(personaFrom).where(p1);
+		// Finalizado mi query completo
+		
+		TypedQuery<Persona> miQueryFinal = this.entityManager.createQuery(miQuery);
+		
+		return miQueryFinal.getSingleResult();
+	}
+	
+	@Override
+	public Persona leerDinamicamente(String nombre, String apellido, String genero) {
+		CriteriaBuilder myCriteria = this.entityManager.getCriteriaBuilder();
+		CriteriaQuery<Persona> myQuery = myCriteria.createQuery(Persona.class);
+		
+		Root<Persona> myTabla = myQuery.from(Persona.class);
+		
+		Predicate predicadoNombre = myCriteria.equal(myTabla.get("nombre"), nombre);
+		Predicate predicadoApellido = myCriteria.equal(myTabla.get("apellido"), apellido);
+		
+		Predicate miPredicadoFinal = null;
+		
+		if(genero.equals("M")) {
+			miPredicadoFinal = myCriteria.and(predicadoNombre, predicadoApellido);
+		} else {
+			miPredicadoFinal = myCriteria.or(predicadoNombre, predicadoApellido);
+		}
+		
+		myQuery.select(myTabla).where(miPredicadoFinal);
+		
+		TypedQuery<Persona> miQueryFinal = this.entityManager.createQuery(myQuery);
+		
+		return miQueryFinal.getSingleResult();
+	}
+	
+	public Persona leerDinamicamentePredicados(String nombre, String apellido, String genero) {
+		CriteriaBuilder myCriteria = this.entityManager.getCriteriaBuilder();
+		CriteriaQuery<Persona> myQuery = myCriteria.createQuery(Persona.class);
+		
+		Root<Persona> myTabla = myQuery.from(Persona.class);
+		
+		Predicate predicadoNombre = myCriteria.equal(myTabla.get("nombre"), nombre);
+		Predicate predicadoApellido = myCriteria.equal(myTabla.get("apellido"), apellido);
+		Predicate predicadoGenero = myCriteria.equal(myTabla.get("genero"), genero);
+		
+		Predicate miPredicadoFinal = null;
+		
+		if(genero.equals("M")) {
+			miPredicadoFinal = myCriteria.or(predicadoNombre, predicadoApellido);
+			miPredicadoFinal = myCriteria.and(miPredicadoFinal, predicadoGenero);
+		} else {
+			miPredicadoFinal = myCriteria.and(predicadoNombre, predicadoApellido);
+			miPredicadoFinal = myCriteria.or(miPredicadoFinal, predicadoGenero);
+		}
+		
+		myQuery.select(myTabla).where(miPredicadoFinal);
+		
+		TypedQuery<Persona> miQueryFinal = this.entityManager.createQuery(myQuery);
+		
 		return miQueryFinal.getSingleResult();
 	}
 
