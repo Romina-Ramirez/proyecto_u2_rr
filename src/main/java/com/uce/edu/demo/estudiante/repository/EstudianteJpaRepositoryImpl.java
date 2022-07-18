@@ -6,6 +6,10 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
 import javax.transaction.Transactional;
 
 import org.springframework.stereotype.Repository;
@@ -114,6 +118,45 @@ public class EstudianteJpaRepositoryImpl implements IEstudianteJpaRepository {
 		miNamedNativeQuery.setParameter("datoSemestre", semestre);
 		miNamedNativeQuery.setParameter("datoGenero", genero);
 		return miNamedNativeQuery.getResultList();
+	}
+	
+	// Criteria API
+	@Override
+	public List<Estudiante> leerPorApellidoCriteriaApi(String apellido) {
+		CriteriaBuilder miBuilder = this.entityManager.getCriteriaBuilder();
+		CriteriaQuery<Estudiante> miQuery = miBuilder.createQuery(Estudiante.class);
+		Root<Estudiante> estudianteFrom = miQuery.from(Estudiante.class);
+		Predicate p1 = miBuilder.equal(estudianteFrom.get("apellido"), apellido);
+		miQuery.select(estudianteFrom).where(p1);
+		TypedQuery<Estudiante> miQueryFinal = this.entityManager.createQuery(miQuery);
+		return miQueryFinal.getResultList();
+	}
+
+	@Override
+	public List<Estudiante> leerDinamicamente(Integer semestre, String nombre, String apellido, String cedula) {
+		CriteriaBuilder myCriteria = this.entityManager.getCriteriaBuilder();
+		CriteriaQuery<Estudiante> myQuery = myCriteria.createQuery(Estudiante.class);
+		
+		Root<Estudiante> myTabla = myQuery.from(Estudiante.class);
+		
+		Predicate predicadoNombre = myCriteria.equal(myTabla.get("nombre"), nombre);
+		Predicate predicadoApellido = myCriteria.equal(myTabla.get("apellido"), apellido);
+		Predicate predicadoCedula = myCriteria.equal(myTabla.get("cedula"), cedula);
+		
+		Predicate miPredicadoFinal = null;
+		
+		if(semestre.equals(6)) {
+			miPredicadoFinal = myCriteria.and(predicadoNombre, predicadoApellido, predicadoCedula);
+		} else {
+			miPredicadoFinal = myCriteria.and(predicadoNombre, predicadoApellido);
+			miPredicadoFinal = myCriteria.or(miPredicadoFinal, predicadoCedula);
+		}
+		
+		myQuery.select(myTabla).where(miPredicadoFinal);
+		
+		TypedQuery<Estudiante> miQueryFinal = this.entityManager.createQuery(myQuery);
+		
+		return miQueryFinal.getResultList();
 	}
 
 	@Override

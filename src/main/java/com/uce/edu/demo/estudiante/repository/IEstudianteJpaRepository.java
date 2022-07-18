@@ -29,6 +29,10 @@ public interface IEstudianteJpaRepository {
 	public List<Estudiante> leerPorApellidoComienzaLetraNamedNative(String letra);
 
 	public List<Estudiante> leerPorSemestreGeneroNamedNative(Integer semestre, String genero);
+	
+	public List<Estudiante> leerPorApellidoCriteriaApi(String apellido);
+	
+	public List<Estudiante> leerDinamicamente(Integer semestre, String nombre, String apellido, String cedula);
 
 	public void actualizar(Estudiante e);
 

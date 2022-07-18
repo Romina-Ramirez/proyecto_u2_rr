@@ -78,6 +78,17 @@ public class EstudianteJpaServiceImpl implements IEstudianteJpaService {
 	public List<Estudiante> buscarPorSemestreGeneroNamedNative(Integer semestre, String genero) {
 		return this.iEstudianteJpaRepository.leerPorSemestreGeneroNamedNative(semestre, genero);
 	}
+	
+	// Criteria API
+	@Override
+	public List<Estudiante> buscarPorApellidoCriteriaApi(String apellido) {
+		return this.iEstudianteJpaRepository.leerPorApellidoCriteriaApi(apellido);
+	}
+
+	@Override
+	public List<Estudiante> buscarDinamicamente(Integer semestre, String nombre, String apellido, String cedula) {
+		return this.iEstudianteJpaRepository.leerDinamicamente(semestre, nombre, apellido, cedula);
+	}
 
 	@Override
 	public void actualizar(Estudiante e) {
