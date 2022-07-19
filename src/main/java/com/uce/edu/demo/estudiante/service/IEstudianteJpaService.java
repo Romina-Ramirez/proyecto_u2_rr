@@ -3,6 +3,8 @@ package com.uce.edu.demo.estudiante.service;
 import java.util.List;
 
 import com.uce.edu.demo.estudiante.repository.modelo.Estudiante;
+import com.uce.edu.demo.estudiante.repository.modelo.EstudianteContadorSemestre;
+import com.uce.edu.demo.estudiante.repository.modelo.EstudianteSencillo;
 
 public interface IEstudianteJpaService {
 
@@ -29,10 +31,14 @@ public interface IEstudianteJpaService {
 	public List<Estudiante> buscarPorApellidoComienzaLetraNamedNative(String letra);
 
 	public List<Estudiante> buscarPorSemestreGeneroNamedNative(Integer semestre, String genero);
-	
+
 	public List<Estudiante> buscarPorApellidoCriteriaApi(String apellido);
-	
+
 	public List<Estudiante> buscarDinamicamente(Integer semestre, String nombre, String apellido, String cedula);
+
+	public List<EstudianteSencillo> buscarPorGeneroSencillo(String genero);
+
+	public List<EstudianteContadorSemestre> consultarCantidadPorSemestre(String genero);
 
 	public void actualizar(Estudiante e);
 

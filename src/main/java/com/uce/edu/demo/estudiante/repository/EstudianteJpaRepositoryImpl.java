@@ -15,6 +15,8 @@ import javax.transaction.Transactional;
 import org.springframework.stereotype.Repository;
 
 import com.uce.edu.demo.estudiante.repository.modelo.Estudiante;
+import com.uce.edu.demo.estudiante.repository.modelo.EstudianteContadorSemestre;
+import com.uce.edu.demo.estudiante.repository.modelo.EstudianteSencillo;
 
 @Repository
 @Transactional
@@ -119,7 +121,7 @@ public class EstudianteJpaRepositoryImpl implements IEstudianteJpaRepository {
 		miNamedNativeQuery.setParameter("datoGenero", genero);
 		return miNamedNativeQuery.getResultList();
 	}
-	
+
 	// Criteria API
 	@Override
 	public List<Estudiante> leerPorApellidoCriteriaApi(String apellido) {
@@ -136,27 +138,46 @@ public class EstudianteJpaRepositoryImpl implements IEstudianteJpaRepository {
 	public List<Estudiante> leerDinamicamente(Integer semestre, String nombre, String apellido, String cedula) {
 		CriteriaBuilder myCriteria = this.entityManager.getCriteriaBuilder();
 		CriteriaQuery<Estudiante> myQuery = myCriteria.createQuery(Estudiante.class);
-		
+
 		Root<Estudiante> myTabla = myQuery.from(Estudiante.class);
-		
+
 		Predicate predicadoNombre = myCriteria.equal(myTabla.get("nombre"), nombre);
 		Predicate predicadoApellido = myCriteria.equal(myTabla.get("apellido"), apellido);
 		Predicate predicadoCedula = myCriteria.equal(myTabla.get("cedula"), cedula);
-		
+
 		Predicate miPredicadoFinal = null;
-		
-		if(semestre.equals(6)) {
+
+		if (semestre.equals(6)) {
 			miPredicadoFinal = myCriteria.and(predicadoNombre, predicadoApellido, predicadoCedula);
 		} else {
 			miPredicadoFinal = myCriteria.and(predicadoNombre, predicadoApellido);
 			miPredicadoFinal = myCriteria.or(miPredicadoFinal, predicadoCedula);
 		}
-		
+
 		myQuery.select(myTabla).where(miPredicadoFinal);
-		
+
 		TypedQuery<Estudiante> miQueryFinal = this.entityManager.createQuery(myQuery);
-		
+
 		return miQueryFinal.getResultList();
+	}
+
+	// Objeto Sencillo
+	@Override
+	public List<EstudianteSencillo> leerPorGeneroSencillo(String genero) {
+		TypedQuery<EstudianteSencillo> myQuery = this.entityManager.createQuery(
+				"SELECT NEW com.uce.edu.demo.estudiante.repository.modelo.EstudianteSencillo(e.cedula, e.apellido, e.semestre) FROM Estudiante e WHERE e.genero = :datoGenero",
+				EstudianteSencillo.class);
+		myQuery.setParameter("datoGenero", genero);
+		return myQuery.getResultList();
+	}
+
+	@Override
+	public List<EstudianteContadorSemestre> leerEstudiantesContadorSemestre(String genero) {
+		TypedQuery<EstudianteContadorSemestre> myQuery = this.entityManager.createQuery(
+				"SELECT NEW com.uce.edu.demo.estudiante.repository.modelo.EstudianteContadorSemestre(e.semestre, e.genero, COUNT(e.semestre)) FROM Estudiante e WHERE e.genero = :datoGenero GROUP BY e.semestre, e.genero",
+				EstudianteContadorSemestre.class);
+		myQuery.setParameter("datoGenero", genero);
+		return myQuery.getResultList();
 	}
 
 	@Override

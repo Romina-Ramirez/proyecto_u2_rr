@@ -8,9 +8,9 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-import com.uce.edu.demo.repository.modelo.PersonaContadorGenero;
-import com.uce.edu.demo.repository.modelo.PersonaSencilla;
-import com.uce.edu.demo.service.IPersonaJpaService;
+import com.uce.edu.demo.estudiante.repository.modelo.EstudianteContadorSemestre;
+import com.uce.edu.demo.estudiante.repository.modelo.EstudianteSencillo;
+import com.uce.edu.demo.estudiante.service.IEstudianteJpaService;
 
 @SpringBootApplication
 public class ProyectoU2RrApplication implements CommandLineRunner {
@@ -18,7 +18,7 @@ public class ProyectoU2RrApplication implements CommandLineRunner {
 	private static final Logger logger = Logger.getLogger(ProyectoU2RrApplication.class);
 
 	@Autowired
-	private IPersonaJpaService iPersonaJpaService;
+	private IEstudianteJpaService iEstudianteJpaService;
 
 	public static void main(String[] args) {
 		SpringApplication.run(ProyectoU2RrApplication.class, args);
@@ -27,14 +27,14 @@ public class ProyectoU2RrApplication implements CommandLineRunner {
 	@Override
 	public void run(String... args) throws Exception {
 
-		List<PersonaSencilla> listaPerSen = this.iPersonaJpaService.buscarPorApellidoSencillo("Ramírez");
-		for (PersonaSencilla item : listaPerSen) {
-			logger.info("Persona Sencilla: " + item);
+		List<EstudianteSencillo> listaEstSen = this.iEstudianteJpaService.buscarPorGeneroSencillo("M");
+		for (EstudianteSencillo item : listaEstSen) {
+			logger.info("Estudiante Sencillo: " + item);
 		}
 
-		List<PersonaContadorGenero> listaPerContGen = this.iPersonaJpaService.consultarCantidadPorGenero();
-		for (PersonaContadorGenero item : listaPerContGen) {
-			logger.info("Cantidad por género: " + item);
+		List<EstudianteContadorSemestre> listaEstContSem = this.iEstudianteJpaService.consultarCantidadPorSemestre("M");
+		for (EstudianteContadorSemestre item : listaEstContSem) {
+			logger.info("Cantidad por semestre: " + item);
 		}
 
 	}
