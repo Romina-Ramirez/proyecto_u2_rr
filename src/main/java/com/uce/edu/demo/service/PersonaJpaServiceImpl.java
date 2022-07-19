@@ -7,6 +7,8 @@ import org.springframework.stereotype.Service;
 
 import com.uce.edu.demo.repository.IPersonaJpaRepository;
 import com.uce.edu.demo.repository.modelo.Persona;
+import com.uce.edu.demo.repository.modelo.PersonaContadorGenero;
+import com.uce.edu.demo.repository.modelo.PersonaSencilla;
 
 @Service
 public class PersonaJpaServiceImpl implements IPersonaJpaService {
@@ -65,12 +67,12 @@ public class PersonaJpaServiceImpl implements IPersonaJpaService {
 	public Persona buscarPorCedulaNamedNative(String cedula) {
 		return this.iPersonaJpaRepository.leerPorCedulaNamedNative(cedula);
 	}
-	
+
 	@Override
 	public Persona buscarPorCedulaCriteriaApi(String cedula) {
 		return this.iPersonaJpaRepository.leerPorCedulaCriteriaApi(cedula);
 	}
-	
+
 	@Override
 	public Persona buscarDinamicamente(String nombre, String apellido, String genero) {
 		return this.iPersonaJpaRepository.leerDinamicamente(nombre, apellido, genero);
@@ -84,6 +86,17 @@ public class PersonaJpaServiceImpl implements IPersonaJpaService {
 	@Override
 	public List<Persona> buscarPorNombre(String nombre) {
 		return this.iPersonaJpaRepository.leerPorNombre(nombre);
+	}
+
+	// Buscar Objeto Sencillo
+	@Override
+	public List<PersonaSencilla> buscarPorApellidoSencillo(String apellido) {
+		return this.iPersonaJpaRepository.leerPorApellidoSencillo(apellido);
+	}
+
+	@Override
+	public List<PersonaContadorGenero> consultarCantidadPorGenero() {
+		return this.iPersonaJpaRepository.leerPersonasContadorGenero();
 	}
 
 	// Actualizar

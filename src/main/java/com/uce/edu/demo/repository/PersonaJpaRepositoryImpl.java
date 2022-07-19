@@ -15,6 +15,8 @@ import javax.transaction.Transactional;
 import org.springframework.stereotype.Repository;
 
 import com.uce.edu.demo.repository.modelo.Persona;
+import com.uce.edu.demo.repository.modelo.PersonaContadorGenero;
+import com.uce.edu.demo.repository.modelo.PersonaSencilla;
 
 @Repository
 @Transactional
@@ -68,13 +70,6 @@ public class PersonaJpaRepositoryImpl implements IPersonaJpaRepository {
 	}
 
 	@Override
-	public List<Persona> leerPorApellido(String apellido) {
-		Query myQuery = this.entityManager.createQuery("SELECT p FROM Persona p WHERE p.apellido = :datoApellido");
-		myQuery.setParameter("datoApellido", apellido);
-		return myQuery.getResultList();
-	}
-
-	@Override
 	public List<Persona> leerPorNombreApellido(String nombre, String apellido) {
 		TypedQuery<Persona> miTypedNamedQuery = this.entityManager.createNamedQuery("Persona.buscarPorNombreApellido",
 				Persona.class);
@@ -101,82 +96,91 @@ public class PersonaJpaRepositoryImpl implements IPersonaJpaRepository {
 
 	@Override
 	public Persona leerPorCedulaCriteriaApi(String cedula) {
-		
+
 		// SELECT p FROM Persona p WHERE p.cedula = :datoCedula
-		
-		// Creamos una instancia de la interfaz CriteriaBuilder Fabrica para construir el SQL
+
+		// Creamos una instancia de la interfaz CriteriaBuilder Fabrica para construir
+		// el SQL
 		CriteriaBuilder miBuilder = this.entityManager.getCriteriaBuilder();
-		
-		// Especificamos el retorno de mi SQL 
+
+		// Especificamos el retorno de mi SQL
 		CriteriaQuery<Persona> miQuery = miBuilder.createQuery(Persona.class);
-		
+
 		// Aquí empezamos a construir el SQL
 		// Root FROM
-		
+
 		Root<Persona> personaFrom = miQuery.from(Persona.class); // FROM Persona
 		// miQuery.select(personaFrom) // Select p FROM Persona
 		// Las condiciones where en criteria API se los conoce como predicados
 		Predicate p1 = miBuilder.equal(personaFrom.get("cedula"), cedula); // p.cedula = :datoCedula
-		
-		//CriteriaQuery<Persona> myQueryCompleto = miQuery.select(personaFrom).where(p1);
+
+		// CriteriaQuery<Persona> myQueryCompleto =
+		// miQuery.select(personaFrom).where(p1);
 		miQuery.select(personaFrom).where(p1);
 		// Finalizado mi query completo
-		
+
 		TypedQuery<Persona> miQueryFinal = this.entityManager.createQuery(miQuery);
-		
+
 		return miQueryFinal.getSingleResult();
 	}
-	
+
 	@Override
 	public Persona leerDinamicamente(String nombre, String apellido, String genero) {
 		CriteriaBuilder myCriteria = this.entityManager.getCriteriaBuilder();
 		CriteriaQuery<Persona> myQuery = myCriteria.createQuery(Persona.class);
-		
+
 		Root<Persona> myTabla = myQuery.from(Persona.class);
-		
+
 		Predicate predicadoNombre = myCriteria.equal(myTabla.get("nombre"), nombre);
 		Predicate predicadoApellido = myCriteria.equal(myTabla.get("apellido"), apellido);
-		
+
 		Predicate miPredicadoFinal = null;
-		
-		if(genero.equals("M")) {
+
+		if (genero.equals("M")) {
 			miPredicadoFinal = myCriteria.and(predicadoNombre, predicadoApellido);
 		} else {
 			miPredicadoFinal = myCriteria.or(predicadoNombre, predicadoApellido);
 		}
-		
+
 		myQuery.select(myTabla).where(miPredicadoFinal);
-		
+
 		TypedQuery<Persona> miQueryFinal = this.entityManager.createQuery(myQuery);
-		
+
 		return miQueryFinal.getSingleResult();
 	}
-	
+
 	public Persona leerDinamicamentePredicados(String nombre, String apellido, String genero) {
 		CriteriaBuilder myCriteria = this.entityManager.getCriteriaBuilder();
 		CriteriaQuery<Persona> myQuery = myCriteria.createQuery(Persona.class);
-		
+
 		Root<Persona> myTabla = myQuery.from(Persona.class);
-		
+
 		Predicate predicadoNombre = myCriteria.equal(myTabla.get("nombre"), nombre);
 		Predicate predicadoApellido = myCriteria.equal(myTabla.get("apellido"), apellido);
 		Predicate predicadoGenero = myCriteria.equal(myTabla.get("genero"), genero);
-		
+
 		Predicate miPredicadoFinal = null;
-		
-		if(genero.equals("M")) {
+
+		if (genero.equals("M")) {
 			miPredicadoFinal = myCriteria.or(predicadoNombre, predicadoApellido);
 			miPredicadoFinal = myCriteria.and(miPredicadoFinal, predicadoGenero);
 		} else {
 			miPredicadoFinal = myCriteria.and(predicadoNombre, predicadoApellido);
 			miPredicadoFinal = myCriteria.or(miPredicadoFinal, predicadoGenero);
 		}
-		
+
 		myQuery.select(myTabla).where(miPredicadoFinal);
-		
+
 		TypedQuery<Persona> miQueryFinal = this.entityManager.createQuery(myQuery);
-		
+
 		return miQueryFinal.getSingleResult();
+	}
+
+	@Override
+	public List<Persona> leerPorApellido(String apellido) {
+		Query myQuery = this.entityManager.createQuery("SELECT p FROM Persona p WHERE p.apellido = :datoApellido");
+		myQuery.setParameter("datoApellido", apellido);
+		return myQuery.getResultList();
 	}
 
 	@Override
@@ -190,6 +194,25 @@ public class PersonaJpaRepositoryImpl implements IPersonaJpaRepository {
 	public List<Persona> leerPorNombre(String nombre) {
 		Query myQuery = this.entityManager.createQuery("SELECT p FROM Persona p WHERE p.nombre = :datoNombre");
 		myQuery.setParameter("datoNombre", nombre);
+		return myQuery.getResultList();
+	}
+
+	// Leer Objeto Sencillo
+	@Override
+	public List<PersonaSencilla> leerPorApellidoSencillo(String apellido) {
+		TypedQuery<PersonaSencilla> myQuery = this.entityManager.createQuery(
+				"SELECT NEW com.uce.edu.demo.repository.modelo.PersonaSencilla(p.nombre, p.apellido) FROM Persona p WHERE p.apellido = :datoApellido",
+				PersonaSencilla.class);
+		myQuery.setParameter("datoApellido", apellido);
+		return myQuery.getResultList();
+	}
+
+	@Override
+	public List<PersonaContadorGenero> leerPersonasContadorGenero() {
+		// SELECT pers_genero,COUNT(p.genero) FROM persona GROUP BY pers_genero
+		TypedQuery<PersonaContadorGenero> myQuery = this.entityManager.createQuery(
+				"SELECT NEW com.uce.edu.demo.repository.modelo.PersonaContadorGenero(p.genero, COUNT(p.genero)) FROM Persona p GROUP BY p.genero",
+				PersonaContadorGenero.class);
 		return myQuery.getResultList();
 	}
 
