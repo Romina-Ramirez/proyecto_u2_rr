@@ -1,6 +1,6 @@
 package com.uce.edu.demo;
 
-import java.math.BigDecimal;
+import java.time.LocalDateTime;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,9 +8,9 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-import com.uce.edu.demo.repository.modelo.Ciudadano;
-import com.uce.edu.demo.repository.modelo.Empleado;
-import com.uce.edu.demo.service.ICiudadanoService;
+import com.uce.edu.demo.pasaporte.repository.modelo.CiudadanoPa;
+import com.uce.edu.demo.pasaporte.repository.modelo.Pasaporte;
+import com.uce.edu.demo.pasaporte.service.ICiudadanoPaService;
 
 @SpringBootApplication
 public class ProyectoU2RrApplication implements CommandLineRunner {
@@ -18,7 +18,7 @@ public class ProyectoU2RrApplication implements CommandLineRunner {
 	private static final Logger logger = Logger.getLogger(ProyectoU2RrApplication.class);
 
 	@Autowired
-	private ICiudadanoService ciudadanoService;
+	private ICiudadanoPaService iCiudadanoService;
 
 	public static void main(String[] args) {
 		SpringApplication.run(ProyectoU2RrApplication.class, args);
@@ -27,31 +27,29 @@ public class ProyectoU2RrApplication implements CommandLineRunner {
 	@Override
 	public void run(String... args) throws Exception {
 
-		Ciudadano ciudadano = new Ciudadano();
-		ciudadano.setNombre("Romina");
-		ciudadano.setApellido("Ramírez");
+		CiudadanoPa ciudadano = new CiudadanoPa();
+		ciudadano.setNombre("Jorge");
+		ciudadano.setApellido("Lopez");
+		ciudadano.setCedula("0701236598");
+		ciudadano.setFechaNacimiento(LocalDateTime.of(2000, 05, 03, 15, 54));
 
-		Empleado empleado = new Empleado();
-		empleado.setCodigoIess("12323");
-		empleado.setSalario(new BigDecimal(100));
-		empleado.setCiudadano(ciudadano);
+		Pasaporte pasaporte = new Pasaporte();
+		pasaporte.setNumero("23478561");
+		pasaporte.setFechaEmision(LocalDateTime.of(2022, 07, 22, 3, 49));
+		pasaporte.setFechaCaducidad(LocalDateTime.of(2032, 07, 22, 3, 49));
+		pasaporte.setCiudadanoPa(ciudadano);
 
-		ciudadano.setEmpleado(empleado);
+		ciudadano.setPasaporte(pasaporte);
 
-		this.ciudadanoService.insertar(ciudadano);
+		this.iCiudadanoService.insertar(ciudadano);
 
-		Ciudadano ciudadano2 = new Ciudadano();
-		ciudadano2.setNombre("Maria");
-		ciudadano2.setApellido("Gomez");
+		CiudadanoPa encontrado = this.iCiudadanoService.buscar(3);
+		logger.info("Persona encontrada: " + encontrado);
 
-		Empleado empleado2 = new Empleado();
-		empleado2.setCodigoIess("45257");
-		empleado2.setSalario(new BigDecimal(200));
-		empleado2.setCiudadano(ciudadano2);
+		ciudadano.setCedula("0701236597");
+		this.iCiudadanoService.actualizar(ciudadano);
 
-		ciudadano.setEmpleado(empleado2);
-
-		// this.ciudadanoService.insertar(empleado2);
+		this.iCiudadanoService.eliminar(3);
 
 	}
 
