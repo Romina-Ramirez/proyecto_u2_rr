@@ -1,6 +1,10 @@
 package com.uce.edu.demo;
 
-import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.List;
+import java.util.ListIterator;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,17 +12,21 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-import com.uce.edu.demo.pasaporte.repository.modelo.CiudadanoPa;
-import com.uce.edu.demo.pasaporte.repository.modelo.Pasaporte;
-import com.uce.edu.demo.pasaporte.service.ICiudadanoPaService;
+import com.uce.edu.demo.repository.modelo.onetomany.Habitacion;
+import com.uce.edu.demo.repository.modelo.onetomany.Hotel;
+import com.uce.edu.demo.service.IHabitacionService;
+import com.uce.edu.demo.service.IHotelService;
 
 @SpringBootApplication
 public class ProyectoU2RrApplication implements CommandLineRunner {
 
 	private static final Logger logger = Logger.getLogger(ProyectoU2RrApplication.class);
-
+	
 	@Autowired
-	private ICiudadanoPaService iCiudadanoService;
+	private IHotelService hotelService;
+	
+	@Autowired
+	private IHabitacionService habitacionService;
 
 	public static void main(String[] args) {
 		SpringApplication.run(ProyectoU2RrApplication.class, args);
@@ -27,29 +35,30 @@ public class ProyectoU2RrApplication implements CommandLineRunner {
 	@Override
 	public void run(String... args) throws Exception {
 
-		CiudadanoPa ciudadano = new CiudadanoPa();
-		ciudadano.setNombre("Jorge");
-		ciudadano.setApellido("Lopez");
-		ciudadano.setCedula("0701236598");
-		ciudadano.setFechaNacimiento(LocalDateTime.of(2000, 05, 03, 15, 54));
-
-		Pasaporte pasaporte = new Pasaporte();
-		pasaporte.setNumero("23478561");
-		pasaporte.setFechaEmision(LocalDateTime.of(2022, 07, 22, 3, 49));
-		pasaporte.setFechaCaducidad(LocalDateTime.of(2032, 07, 22, 3, 49));
-		pasaporte.setCiudadanoPa(ciudadano);
-
-		ciudadano.setPasaporte(pasaporte);
-
-		this.iCiudadanoService.insertar(ciudadano);
-
-		CiudadanoPa encontrado = this.iCiudadanoService.buscar(3);
-		logger.info("Persona encontrada: " + encontrado);
-
-		ciudadano.setCedula("0701236597");
-		this.iCiudadanoService.actualizar(ciudadano);
-
-		this.iCiudadanoService.eliminar(3);
+		Hotel hotel = new Hotel();
+		hotel.setNombre("Hilton Colon GUY");
+		hotel.setDireccion("Malecon");
+		
+		// this.hotelService.insertar(hotel);
+		
+		// Buscar numero
+		Hotel hotelid = new Hotel();
+		hotelid.setId(1);
+		
+		Habitacion habitacion = new Habitacion();
+		habitacion.setNumero("356");
+		habitacion.setPiso("12");
+		habitacion.setTipo("Doble");
+		habitacion.setHotel(hotelid);
+		
+		Habitacion habitacion2 = new Habitacion();
+		habitacion2.setNumero("357");
+		habitacion2.setPiso("12");
+		habitacion2.setTipo("Doble");
+		habitacion2.setHotel(hotelid);
+		
+		this.habitacionService.insertar(habitacion);
+		this.habitacionService.insertar(habitacion2);
 
 	}
 
